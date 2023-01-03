@@ -58,8 +58,8 @@ export default function Localisation({nom} : {nom :string})
         <Marker
         key={1}
         coordinate={{latitude:location?.coords.latitude??0,longitude:location?.coords.longitude??0}}
-        title={"You"}
-        description={"Vous êtes ici !"}
+        title={nom}
+        description={adress}
         />
         </MapView>
         <View style={styles.map}>
