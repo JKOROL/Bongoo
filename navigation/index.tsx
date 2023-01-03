@@ -12,8 +12,11 @@ import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import ExperienceScreen from '../screens/ExperienceScreen';
+import ExploreScreen from '../screens/ExploreScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
+import ProfilScreen from '../screens/ProfilScreen';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
@@ -58,11 +61,11 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Explore"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme].tint,
       }}>
-      <BottomTab.Screen
+      {/* <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
         options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
@@ -83,13 +86,37 @@ function BottomTabNavigator() {
             </Pressable>
           ),
         })}
-      />
-      <BottomTab.Screen
+      /> */}
+      {/* <BottomTab.Screen
         name="TabTwo"
         component={TabTwoScreen}
         options={{
           title: 'Tab Two',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      /> */}
+      <BottomTab.Screen
+        name="Explore"
+        component={ExploreScreen}
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Experience"
+        component={ExperienceScreen}
+        options={{
+          title: 'Experience',
+          tabBarIcon: ({ color }) => <TabBarIcon name="qrcode" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="Profil"
+        component={ProfilScreen}
+        options={{
+          title: 'Profil',
+          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
         }}
       />
     </BottomTab.Navigator>
