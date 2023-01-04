@@ -17,10 +17,7 @@ export default class Restaurant{
         this.photo="";
     }
 
-    public getDistance(latlong : {latitude:number,longitude:number}|null){
-        if(latlong)
-        {
-            return getDistance({latitude:this.latitude,longitude:this.longitude},latlong)
-        }
+    public getDistance(latlong : {latitude:number,longitude:number}){
+        return getDistance({latitude:this.latitude,longitude:this.longitude},latlong)
     }
 }

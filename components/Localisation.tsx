@@ -6,42 +6,19 @@ import { LocationObject } from "expo-location";
 import MapView, { Marker } from "react-native-maps";
 import { Restaurant } from "../classes";
 import RestaurantCard from "./RestaurantCard";
+import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 
-export default function Localisation({nom} : {nom :string})
+type LocalisationProps = {
+    username:string,
+    userLocation: LocationObject,
+    restaurant: Array<Restaurant>
+}
+
+export default function Localisation({username, userLocation,restaurant} : LocalisationProps)
 {
-    const [location, setLocation] = useState<LocationObject>();
-    const [errorMsg, setErrorMsg] = useState("");
-    const [adress, setAdress] = useState("");
-    const [restaurants, setRestaurants] = useState<Array<Restaurant>>([])
+    const [location, setLocation] = useState<LocationObject>(userLocation);
+    const [restaurants, setRestaurants] = useState<Array<Restaurant>>(restaurant)
     const [mapHidden, setMapHidden] = useState(false);
-    
-    
-    useEffect(() => {
-        (async () => {
-            
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                return;
-            }
-            
-            let location = await Location.getCurrentPositionAsync({});
-            let adressObject = await Location.reverseGeocodeAsync(location.coords);
-            if(adressObject[0]["city"])
-            {
-                setAdress(adressObject[0]["city"])
-            }
-            setLocation(location);
-            setRestaurants([new Restaurant(1,"Kantiin",47.850812,1.892373),new Restaurant(2,"test",47.850812,1.892373),new Restaurant(3,"Kantiin",47.850812,1.892373),new Restaurant(4,"OUI",47.850812,1.892373),new Restaurant(5,"Kantiin",47.900812,1.892373)])
-        })();
-    }, []);
-    setRestaurants
-    let text = 'Waiting..';
-    if (errorMsg) {
-        text = errorMsg;
-    } else if (location) {
-        text = JSON.stringify(location);
-    }
     
     return (
         <View style={styles.container}>
@@ -60,18 +37,19 @@ export default function Localisation({nom} : {nom :string})
         <Marker
         key={0}
         coordinate={{latitude:location?.coords.latitude??0,longitude:location?.coords.longitude??0}}
-        title={nom}
-        description={adress}
+        title={username}
         />
-        {restaurants.map((restaurant)=><Marker key={restaurant.id} coordinate={{latitude:restaurant.latitude,longitude:restaurant.longitude}} title={restaurant.nom}></Marker>)}
+        {restaurants.sort((a,b)=> a.getDistance({latitude : location?.coords.latitude, longitude:location?.coords.longitude})>b.getDistance({latitude : location?.coords.latitude, longitude:location?.coords.longitude})?1:-1).map((restaurant)=><Marker key={restaurant.id} coordinate={{latitude:restaurant.latitude,longitude:restaurant.longitude}} title={restaurant.nom}>
+            <MaterialIcons size={30} name={"restaurant"} />
+        </Marker>)}
         </MapView>)}
-        <TouchableOpacity style={styles.showMap}>
-            <Text>Masquer carte</Text>
+        <TouchableOpacity style={styles.showMap} onPress={()=>setMapHidden(!mapHidden)}>
+            <FontAwesome size={30} style={{ justifyContent:"center" }} color="white" name={mapHidden?"angle-double-down":"angle-double-up"} />
         </TouchableOpacity>
-        <FlatList
+        {location && (<FlatList
             style={styles.flatList}
             data={restaurants}
-            renderItem={(restaurants)=>{return(<RestaurantCard key={restaurants.index} restaurant={restaurants.item} latlong={{latitude:location?.coords.latitude??0,longitude:location?.coords.latitude??0}}></RestaurantCard>)}}></FlatList>
+            renderItem={(restaurants)=>{return(<RestaurantCard key={restaurants.index} restaurant={restaurants.item} latlong={{latitude:location?.coords.latitude,longitude:location?.coords.longitude}}></RestaurantCard>)}}></FlatList>)}
         </View>
         );}
         
@@ -89,10 +67,11 @@ export default function Localisation({nom} : {nom :string})
                 margin: 0
             },
             showMap: {
+                justifyContent:"center",
+                alignItems:"center"
+            },
+            flatList: {
 
-            },
-            flatList:{
-                
-            },
+            }
         });
         

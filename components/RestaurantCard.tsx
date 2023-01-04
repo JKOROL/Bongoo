@@ -12,7 +12,7 @@ latlong : {latitude:number,longitude:number}
 export default function RestaurantCard(props : restaurantCardProps)
 {
     const [restaurant,setRestaurants] = useState<Restaurant>(props.restaurant);
-    const [distance,setDistance] = useState( restaurant.getDistance(props.latlong));
+    const [distance,setDistance] = useState(restaurant.getDistance(props.latlong));
 
     const renderNote = () =>{
         let stars = [];
@@ -24,7 +24,7 @@ export default function RestaurantCard(props : restaurantCardProps)
             }
             if(i%1==0 && i>0)
             {
-                stars.push(<FontAwesome size={15} style={{  }} color="white" name={star==0?"star-o":star==1?"star-half-o":"star"} />)
+                stars.push(<FontAwesome key={i} size={15} style={{  }} color="white" name={star==0?"star-o":star==1?"star-half-o":"star"} />)
                 star=0;
             }
         }
@@ -45,7 +45,7 @@ export default function RestaurantCard(props : restaurantCardProps)
                 
             </View>
             <View >
-                <View><Text>{restaurant.nom} {distance ? distance>1000?distance/1000+" km":distance+" m":""}</Text></View>
+                <View><Text>{restaurant.nom} {distance ? distance>1000?(distance/1000).toFixed(2)+" km":distance+" m":""}</Text></View>
                 <View style={{flexDirection: "row"}}>
                     {renderNote().map(etoile=>{return (etoile)})}
                 </View>
