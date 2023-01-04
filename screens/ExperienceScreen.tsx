@@ -1,39 +1,51 @@
 import { Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { Camera, CameraType } from 'expo-camera';
-
-import EditScreenInfo from '../components/EditScreenInfo';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Text, View } from '../components/Themed';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ExperienceScreen() {
+  
+  const [hasPermission, setHasPermission] = useState<boolean>();
+  const [scanned, setScanned] = useState(false);
 
-  const [type, setType] = useState(CameraType.back);
-  const [permission, requestPermission] = Camera.useCameraPermissions();
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    };
 
-  if (!permission) {
-    // Camera permissions are still loading
-    return <View />;
+    getBarCodeScannerPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }: {type : string,data:string}) => {
+    setScanned(true);
+    console.log(data);
+    console.log(data.substring(0,8));
+    if(data.substring(0,9)!=="bongoo://")
+    {
+      alert(`Invalid bar code has been scanned!`);
+    }
+    else{
+      alert(`Restaurant with ID ${data.substring(9)}`);
+    }
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
   }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet
-    return (
-      <View style={styles.container}>
-        <Text style={{ textAlign: 'center' }}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
-
-  function toggleCameraType() {
-    setType(current => (current === CameraType.back ? CameraType.front : CameraType.back));
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
   }
 
   return (
     <View style={styles.camera}>
-      <TouchableOpacity style={styles.camera} onPress={toggleCameraType}>
-      <Camera style={styles.camera} type={type}>
-      </Camera>
+      <TouchableOpacity style={styles.camera}>
+
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
+      />
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
       </TouchableOpacity>
     </View>
   );
