@@ -18,7 +18,6 @@ export default function RestaurantCard(props : restaurantCardProps)
         let stars = [];
         let star=0
         for (let i = 0; i <= 5; i=i+0.5) {
-            console.log(i);
             if(i<=restaurant.note)
             {
                 star++
@@ -31,9 +30,12 @@ export default function RestaurantCard(props : restaurantCardProps)
         }
         return stars;
     }
+    const handlePress = ()=>{
+        alert("touché "+restaurant.id);
+    }
     
     return(
-        <TouchableOpacity style={styles.container} onPress={()=>alert("Touché")}>
+        <TouchableOpacity style={styles.container} onPress={handlePress}>
             <View style={styles.imageContainer}>
                 {restaurant.photo !==""?(
                     <Image style={styles.image} source={{uri: restaurant.photo}}></Image>
