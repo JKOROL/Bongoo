@@ -13,7 +13,7 @@ export default function Localisation({nom} : {nom :string})
     const [location, setLocation] = useState<LocationObject>();
     const [errorMsg, setErrorMsg] = useState("");
     const [adress, setAdress] = useState("");
-    const [restaurants, setRestaurants] = useState<Array<Restaurant>>([new Restaurant("Kantiin"),new Restaurant("test"),new Restaurant("Kantiin"),new Restaurant("OUI"),new Restaurant("Kantiin")])
+    const [restaurants, setRestaurants] = useState<Array<Restaurant>>([])
     
     
     useEffect(() => {
@@ -32,6 +32,7 @@ export default function Localisation({nom} : {nom :string})
                 setAdress(adressObject[0]["city"])
             }
             setLocation(location);
+            setRestaurants([new Restaurant("Kantiin",location.coords),new Restaurant("test",location.coords),new Restaurant("Kantiin",location.coords),new Restaurant("OUI",location.coords),new Restaurant("Kantiin",location.coords)])
         })();
     }, []);
     setRestaurants
