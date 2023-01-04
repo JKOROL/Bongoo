@@ -32,7 +32,7 @@ export default function Localisation({nom} : {nom :string})
                 setAdress(adressObject[0]["city"])
             }
             setLocation(location);
-            setRestaurants([new Restaurant("Kantiin",location.coords),new Restaurant("test",location.coords),new Restaurant("Kantiin",location.coords),new Restaurant("OUI",location.coords),new Restaurant("Kantiin",location.coords)])
+            setRestaurants([new Restaurant("Kantiin"),new Restaurant("test"),new Restaurant("Kantiin"),new Restaurant("OUI"),new Restaurant("Kantiin")])
         })();
     }, []);
     setRestaurants
@@ -66,7 +66,7 @@ export default function Localisation({nom} : {nom :string})
         <View style={styles.map}>
             <FlatList<Restaurant> 
             data={restaurants}
-            renderItem={(restaurants)=>{return(<RestaurantCard key={restaurants.index} restaurant={restaurants.item}></RestaurantCard>)}}></FlatList>
+            renderItem={(restaurants)=>{return(<RestaurantCard key={restaurants.index} restaurant={restaurants.item} latlong={{latitude:location?.coords.latitude??0,longitude:location?.coords.latitude??0}}></RestaurantCard>)}}></FlatList>
         </View>
         </View>
         );}
