@@ -19,8 +19,6 @@ export default function ExperienceScreen() {
 
   const handleBarCodeScanned = ({ type, data }: {type : string,data:string}) => {
     setScanned(true);
-    console.log(data);
-    console.log(data.substring(0,8));
     if(data.substring(0,9)!=="bongoo://")
     {
       alert(`Invalid bar code has been scanned!`);
