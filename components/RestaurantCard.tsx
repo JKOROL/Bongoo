@@ -18,7 +18,7 @@ export default function RestaurantCard(props : restaurantCardProps)
                 <Image style={styles.image} source={{uri: restaurant.photo}}></Image>
             </View>
             <View >
-                <View><Text>{restaurant.nom}</Text></View>
+                <View><Text>{restaurant.nom} à {restaurant.distance>1000?restaurant.distance/1000+" km":restaurant.distance+" m"}</Text></View>
                 <View style={{flexDirection: "row"}}>
                     <FontAwesome size={15} style={{  }} color="white" name={restaurant.note==0?"star-o":"star"} />
                     <FontAwesome size={15} style={{  }} color="white" name={restaurant.note<1.5?"star-o":"star"} />
