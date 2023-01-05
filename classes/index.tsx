@@ -1,3 +1,5 @@
 import Restaurant from "./Restaurant";
+import User from "./User";
+import Order from "./Order";
 
-export {Restaurant}
+export {Restaurant, User, Order}
