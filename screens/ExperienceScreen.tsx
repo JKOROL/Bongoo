@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Restaurant } from '../classes';
 import RestaurantMenu from './RestaurantMenu';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ExperienceScreen() {
   
@@ -12,13 +13,18 @@ export default function ExperienceScreen() {
   const [scanned, setScanned] = useState(false);
   const [restaurant, setRestaurant] = useState(new Restaurant(-1,"",0,0));
   const navigation = useNavigation();
+  const [cart,setCart] = useState<string | null>(null);
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     };
+    const fetchData = async () => {
+      setCart(await AsyncStorage.getItem("cart"));
+    }
 
+    fetchData();
     getBarCodeScannerPermissions();
   }, []);
 
@@ -43,7 +49,7 @@ export default function ExperienceScreen() {
 
   return (
     <View style={styles.camera}>
-      {!scanned? (
+      {!scanned && cart ===null? (
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
