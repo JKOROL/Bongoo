@@ -2,11 +2,16 @@ import { Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Text, View } from '../components/Themed';
 import { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { Restaurant } from '../classes';
+import RestaurantMenu from './RestaurantMenu';
 
 export default function ExperienceScreen() {
   
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [scanned, setScanned] = useState(false);
+  const [restaurant, setRestaurant] = useState(new Restaurant(-1,"",0,0));
+  const navigation = useNavigation();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -18,13 +23,14 @@ export default function ExperienceScreen() {
   }, []);
 
   const handleBarCodeScanned = ({ type, data }: {type : string,data:string}) => {
-    setScanned(true);
+    
     if(data.substring(0,9)!=="bongoo://")
     {
       alert(`Invalid bar code has been scanned!`);
     }
     else{
-      alert(`Restaurant with ID ${data.substring(9)}`);
+      setRestaurant(new Restaurant(parseInt(data.substring(9)),"Restaurant Dev",0,0));
+      setScanned(true);
     }
   };
 
@@ -37,14 +43,15 @@ export default function ExperienceScreen() {
 
   return (
     <View style={styles.camera}>
-      <TouchableOpacity style={styles.camera}>
-
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-      </TouchableOpacity>
+      {!scanned? (
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+      ):(
+        <RestaurantMenu setScanned={setScanned} restaurant={restaurant}></RestaurantMenu>
+      ) }
+      
     </View>
   );
 }

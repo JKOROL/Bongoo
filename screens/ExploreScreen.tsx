@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { FlatList, StyleSheet } from 'react-native';
 import { Restaurant } from '../classes';
 import * as Location from 'expo-location';
-
-import EditScreenInfo from '../components/EditScreenInfo';
 import Localisation from '../components/Localisation';
 import { Text, View } from '../components/Themed';
 import { LocationObject } from 'expo-location';

@@ -10,14 +10,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 import OrderDetail from '../components/OrderDetail';
+import { Text } from '../components/Themed';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import CartModal from '../screens/CartModal';
 import ExperienceScreen from '../screens/ExperienceScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ModalScreen from '../screens/ModalScreen';
 import NotFoundScreen from '../screens/NotFoundScreen';
 import ProfilScreen from '../screens/ProfilScreen';
+import RestaurantMenu from '../screens/RestaurantMenu';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
@@ -44,6 +47,7 @@ function RootNavigator() {
       <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen name="OrderDetail" component={OrderDetail} options={{ title: 'Detail commande' }} />
+        <Stack.Screen name="CartModal" component={CartModal} options={{ title: 'Detail commande' }} />
       </Stack.Group>
 
     </Stack.Navigator>
@@ -93,15 +97,31 @@ function BottomTabNavigator() {
         options={{
           title: 'Explore',
           tabBarIcon: ({ color }) => <TabBarIcon name="map" color={color} />,
+          
         }}
       />
       <BottomTab.Screen
         name="Experience"
         component={ExperienceScreen}
-        options={{
+        options={({navigation})=>({
           title: 'Experience',
           tabBarIcon: ({ color }) => <TabBarIcon name="qrcode" color={color} />,
-        }}
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate("CartModal")}
+              style={({ pressed }) => ({
+                opacity: pressed ? 0.5 : 1,
+              })}>
+              <FontAwesome
+                name="shopping-basket"
+                size={25}
+                color={Colors[colorScheme].text}
+                style={{ marginRight: 15 }}
+              />
+              <Text>0</Text>
+            </Pressable>
+          )
+        })}
       />
       <BottomTab.Screen
         name="Profil"
